@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="./images/モグモグパイモン.png">
+    <title>PiyoOyip:Blue</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="./libs/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="./libs/bootstrap/carousel.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./css/custom.css">
+    <style>
+        /* 音楽ゲームのスタイル */
+        .music-game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .music-game-container h2 {
+            text-align: center;
+        }
+
+        .music-btn-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .music-btn {
+            width: 80px;
+            height: 80px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .music-btn.active {
+            background-color: #32cd32;
+        }
+
+        .scoreboard {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .scoreboard p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header(Start) -->
+    <header>
+        <nav class="navbar navbar-dark navbar-expand-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="./images/モグモグパイモン.png"><span class="black-text">my_portfolio</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#targetCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="targetCollapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item d-flex align-items-center">
+                            <a class="nav-link d-flex align-items-center" href="#">
+                                <img src="images/HACHIWARE.png" alt="Home Icon" class="nav-icon" />
+                                <span class="black-text ms-2">Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#my_portfolio">
+                                <span class="black-text">
+                                    <img src="images/GURASANHACHIWARE.png" class="nav-icon">
+                                    Portfolio
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#my_about">
+                                <span class="black-text">
+                                    <img src="images/CHIKAWA.png" alt="Image" class="nav-icon">
+                                    About
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#my_content">
+                                <span class="black-text">
+                                    <img src="images/GURASANCHIKAWA.png" alt="Image" class="nav-icon">
+                                    Contact
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#shooting-game">
+                                <span class="black-text">
+                                    <img src="images/緑ボンプ.png" alt="Image" class="nav-icon">
+                                    Shooting Game
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Header(End) -->
+
+    <!-- Main(Start) -->
+    <main>
+        <div class="text-center" id="my_key">
+            <div class="d-flex flex-column align-items-center custom-bg">
+                <h1 class="black-text">My Portfolio</h1>
+                <h3 class="black-text">ゲームコレクション</h3>
+                <h6 class="black-text">Web Games</h6>
+            </div>
+        </div>
+
+        <div class="games-container" id="my_portfolio">
+            <h1>ポートフォリオゲームコレクション</h1>
+            <div class="game-container" id="memory-game">
+                <h2>神経衰弱</h2>
+                <div class="game-board" id="board"></div>
+                <div class="scoreboard">
+                    <p>スコア: <span id="score">0</span></p>
+                </div>
+            </div>
+
+            <div class="battle-container" id="battle-container">
+                <h1>ターン制バトルゲーム</h1>
+    
+                <!-- 戦闘エリア -->
+                <div class="battle-field">
+                    <!-- プレイヤー1 -->
+                    <div id="player1" class="player">
+                        <img src="./images/GURASANCHIKAWA.png" alt="Player 1" class="player-img">
+                        <div class="player-status">
+                            <p>HP: <span id="player1-hp">100</span></p>
+                            <p>攻撃力: <span id="player1-attack">0</span></p>
+                        </div>
+                    </div>
+                    <!-- プレイヤー2 -->
+                    <div id="player2" class="player">
+                        <img src="./images/GURASANHACHIWARE.png" alt="Player 2" class="player-img">
+                        <div class="player-status">
+                            <p>HP: <span id="player2-hp">100</span></p>
+                            <p>攻撃力: <span id="player2-attack">0</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="turn-indicator">
+                    <div>
+                        <span id="player1-name">プレイヤー1</span>
+                        <span id="arrow1" class="arrow">→</span> <!-- プレイヤー1の矢印 -->
+                    </div>
+                    <div>
+                        <span id="arrow2" class="arrow">⇦</span> <!-- プレイヤー2の矢印 -->
+                        <span id="player2-name">プレイヤー2</span>
+                        
+                    </div>
+                </div>
+    
+                <!-- ボタンコンテナ -->
+                <div class="buttons-container">
+                    <button id="start-btn" class="btn btn-primary">ゲーム開始</button>
+                    <button id="attack-btn" class="btn btn-danger" disabled>攻撃</button>
+                    <button id="heal-btn" class="btn btn-success" disabled>回復</button>
+                    <button id="item-btn" class="btn btn-warning" disabled>アイテム</button>
+                </div>
+    
+                <div class="scoreboard" id="scoreboard">
+                    <p>ターン: <span id="turn">プレイヤー1</span></p>
+                </div>
+                <div id="result"></div>
+
+                <!-- メッセージログ -->
+            <div class="message-log">
+                <h3>戦闘ログ</h3>
+                <ul id="message-log"></ul>
+            </div>
+
+            <br>
+            <!--クイズゲーム-->
+            <div class="game-container" id="quiz-game">
+                <h2>震源地名クイズ</h2>
+                <h3>消えている箇所を答えてください。</h3>
+                <div class="quiz-container" id="quiz-container">
+                    <!-- クイズエリア -->
+                    <div id="quiz-question">
+                        <img src="" id="quiz-image" alt="Quiz Image" class="quiz-image">
+                    </div>
+                    <div id="quiz-options" class="quiz-options">
+                        <button class="btn btn-outline-primary quiz-option" id="option1"></button>
+                        <button class="btn btn-outline-primary quiz-option" id="option2"></button>
+                        <button class="btn btn-outline-primary quiz-option" id="option3"></button>
+                        <button class="btn btn-outline-primary quiz-option" id="option4"></button>
+                    </div>
+                    <button id="hint-btn" class="btn btn-info">ヒント</button> <!-- ヒントボタン -->
+                    <div class="scoreboard">
+                        <p>現在のスコア: <span id="quiz-score">0</span></p>
+                        <p>問題: <span id="current-question">1</span> / 5</p>
+                    </div>
+                    <div id="hint-container" style="display: none;">
+                        <p id="hint-text">ヒントがここに表示されます。</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+    <!-- Main(End) -->
+
+    <!-- Footer(Start) -->
+    <footer>
+        <div class="container text-muted py-5">
+            <p class="float-end mb-1"><a href="#">Back to top</a></p>
+            <p class="mb-1">&copy; Bootstrap</p>
+            <p class="mb-0">
+                <a href="https://getbootstrap.jp" target="_blank">Bootstrap公式サイト</a>や
+                <a href="https://getbootstrap.jp/docs/5.0/getting-started/introduction/" target="_blank">スタートガイド</a>、
+                <a href="https://icons.getbootstrap.com/" target="_blank">アイコン</a>を活用しましょう。
+            </p>
+        </div>
+    </footer>
+    <!-- Footer(End) -->
+
+    <!-- JavaScript -->
+    <script src="./libs/jquery/jquery-3.6.1.min.js"></script>
+    <script src="./libs/bootstrap/popper.min.js"></script>
+    <script src="./libs/bootstrap/bootstrap.min.js"></script>
+    <script src="./main.js"></script>
+</body>
+</html>

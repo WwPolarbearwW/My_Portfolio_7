@@ -1,0 +1,342 @@
+/* CSS */
+
+html, body{
+	width: 100%; height: 100%;
+	background-color: whitesmoke;
+}
+
+.navbar-brand img{
+	width: 28px; height: auto;
+	margin: 0px 5px; padding: 0px;
+	border-radius: 14px;
+}
+
+#my_key{
+	width: 100%; height: auto;
+	padding: 12rem 0px;
+	background-color: lightsteelblue;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-image: url("../images/Korection.webp");
+	background-position: center;
+	color: white;
+}
+
+#my_key h1{
+	margin: 1rem 0px;
+	font-size: 3rem;
+}
+
+#my_key p{
+	margin: 1rem 0px;
+	font-size: 1rem;
+}
+
+#my_portfolio{
+	text-align: center;
+}
+
+#my_portfolio{
+	width: 100%; height: auto;
+	padding: 6rem 0px;
+}
+
+#my_portfolio i{
+	font-size: 4.5rem;
+}
+
+#my_portfolio h3{
+	font-size: 2rem;
+}
+
+#my_portfolio p{
+	font-size: 1rem;
+}
+
+.img_showcase{
+	background-size: cover;
+	background-position: bottom;
+}
+
+.box_showcase{
+	padding: 6rem;
+}
+
+#my_about{
+	width: 100%; height: auto;
+	background-color: lightsteelblue;
+	background-image: url("../images/Elmination.webp");
+	background-position: center;
+	color: black;
+}
+
+#my_contact{
+	width: 100%; height: auto;
+}
+
+#my_contact i{
+	padding: 0.2rem;
+	font-size: 2rem;
+}
+
+.black-text {
+    color: purple;
+}
+
+.bi-filetype-html {
+    color: blue; /* 任意のサイズに変更可能 */
+	
+}
+.bi-filetype-css{
+	color: blue;
+}
+
+.bi-filetype-js{
+	color: blue;
+}
+
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+  }
+  
+  h1 {
+    margin-top: 20px;
+  }
+  
+  /* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+.games-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f8ff;  /* 明るい水色（例） */
+    padding: 30px; /* 少し余白を増やして視覚的に分ける */
+    border-radius: 10px;
+}
+
+.game-container {
+    background-color: #e0e0e0; /* 淡いグレー */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    padding: 20px;
+    width: 80%;
+    max-width: 650px; /* ゲームコンテナの幅を少し大きく */
+}
+
+.game-container h2 {
+    margin-bottom: 20px;
+}
+
+/* ゲームボードのレイアウト（横に6列） */
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);  /* 横に6列に配置 */
+    grid-gap: 15px;  /* カード間の間隔を少し広げる */
+    justify-items: center;  /* 横方向に中央寄せ */
+    align-items: center;    /* 縦方向に中央寄せ */
+    margin: 20px 0;
+}
+
+/* カードのスタイル（少し大きく） */
+.card {
+    width: 90px;     /* カードの幅を少し大きく */
+    height: 120px;   /* カードの高さを少し大きく */
+    background-color: #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;  /* フォントサイズを少し大きく */
+    cursor: pointer;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card img {
+    width: 100%;      /* カードの幅に合わせる */
+    height: 100%;     /* カードの高さに合わせる */
+    object-fit: cover; /* 画像がカードにフィットするように調整 */
+}
+
+.card-back {
+    font-size: 22px;  /* 裏面のフォントサイズを少し大きく */
+}
+
+/* リズムゲームのスタイル */
+.rhythm-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px auto;
+}
+
+.rhythm-btn {
+    width: 100px;
+    height: 100px;
+    font-size: 24px;
+    margin: 10px;
+    border: none;
+    border-radius: 50%;
+    background-color: #ff6347;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.rhythm-btn:active {
+    background-color: #b22222;
+}
+
+.scoreboard {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.nav-icon{
+    width: 50px;
+    height: 50px;
+}
+
+.battle-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+
+.battle-field {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.player-status {
+    font-size: 18px;
+}
+
+.buttons-container {
+    margin-top: 20px;
+}
+
+.btn {
+    margin: 10px;
+    font-size: 18px;
+}
+
+.scoreboard {
+    margin-top: 30px;
+    font-size: 20px;
+}
+
+.winner {
+    font-size: 24px;
+    font-weight: bold;
+    color: green;
+}
+
+#result {
+    margin-top: 30px;
+    font-size: 22px;
+    font-weight: bold;
+    color: red;
+}
+
+/* メッセージログのスタイル */
+.message-log {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.message-log h3 {
+    text-align: center;
+    font-size: 20px;
+}
+
+.message-log ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.message-log ul li {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+#turn-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+.arrow {
+    font-size: 30px;
+    color: gray;
+    visibility: hidden; /* 最初は非表示 */
+}
+
+.arrow.visible {
+    visibility: visible; /* クラス追加で表示 */
+    color: green; /* 現在のターンの矢印を緑に */
+}
+
+.quiz-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0; /* 背景色 */
+    border: 1px solid #ddd; /* 枠線 */
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 100%; /* レスポンシブ対応 */
+}
+
+#quiz-question {
+    display: inline-block; /* 画像に合わせて自動調整 */
+    background-color: #fff; /* 背景色 */
+    margin-bottom: 20px;
+    border-radius: 8px; /* 角を丸める */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影を追加 */
+}
+
+#quiz-image {
+    display: block;
+    max-width: 100%; /* コンテナに収まるように調整 */
+    height: auto; /* アスペクト比を維持 */
+    border-radius: 8px; /* 背景と同じ角丸にする */
+}
