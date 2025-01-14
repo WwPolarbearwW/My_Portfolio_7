@@ -561,3 +561,239 @@ document.addEventListener("DOMContentLoaded", () => {
     quizScore.textContent = currentScore;
     loadQuestion();
 });
+
+// ...existing code...
+
+// テトリスの設定
+const tetrisBoard = document.getElementById('tetris-board');
+const tetrisScoreDisplay = document.getElementById('tetris-score');
+const tetrisStartBtn = document.getElementById('tetris-start-btn');
+const tetrisRestartBtn = document.getElementById('tetris-restart-btn');
+const rows = 20;
+const cols = 10;
+let tetrisScore = 0;
+let tetrisInterval;
+let currentPiece;
+let currentPosition;
+let currentRotation;
+let boardState;
+
+// テトリスのボードを初期化
+const createBoard = () => {
+  tetrisBoard.innerHTML = '';
+  boardState = Array(rows * cols).fill(0);
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      tetrisBoard.appendChild(cell);
+    }
+  }
+};
+
+// ...existing code...
+
+// テトリスのピース
+const pieces = [
+  {
+    shape: [
+      [1, 1, 1, 1], // I
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ],
+    rotations: 2
+  },
+  {
+    shape: [
+      [1, 1, 1], // T
+      [0, 1, 0],
+      [0, 0, 0]
+    ],
+    rotations: 4
+  },
+  {
+    shape: [
+      [1, 1, 0], // Z
+      [0, 1, 1],
+      [0, 0, 0]
+    ],
+    rotations: 2
+  },
+  {
+    shape: [
+      [0, 1, 1], // S
+      [1, 1, 0],
+      [0, 0, 0]
+    ],
+    rotations: 2
+  },
+  {
+    shape: [
+      [1, 1, 1], // L
+      [1, 0, 0],
+      [0, 0, 0]
+    ],
+    rotations: 4
+  },
+  {
+    shape: [
+      [1, 1, 1], // J
+      [0, 0, 1],
+      [0, 0, 0]
+    ],
+    rotations: 4
+  },
+  {
+    shape: [
+      [1, 1], // O
+      [1, 1]
+    ],
+    rotations: 1
+  }
+];
+
+// ピースを描画
+const drawPiece = () => {
+  currentPiece.shape.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      if (cell) {
+        const index = (currentPosition.y + y) * cols + (currentPosition.x + x);
+        tetrisBoard.children[index].classList.add('filled');
+      }
+    });
+  });
+};
+
+// ピースを消去
+const undrawPiece = () => {
+  currentPiece.shape.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      if (cell) {
+        const index = (currentPosition.y + y) * cols + (currentPosition.x + x);
+        tetrisBoard.children[index].classList.remove('filled');
+      }
+    });
+  });
+};
+
+// ピースが範囲内にあるかチェック
+const isValidMove = (position) => {
+  return currentPiece.shape.every((row, y) => {
+    return row.every((cell, x) => {
+      if (!cell) return true;
+      const newPos = (position.y + y) * cols + (position.x + x);
+      const row = position.y + y;
+      const col = position.x + x;
+      return row >= 0 && row < rows && col >= 0 && col < cols && !boardState[newPos];
+    });
+  });
+};
+
+// ピースを固定
+const freezePiece = () => {
+  currentPiece.shape.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      if (cell) {
+        const index = (currentPosition.y + y) * cols + (currentPosition.x + x);
+        boardState[index] = 1;
+      }
+    });
+  });
+};
+
+// ピースを移動
+const movePiece = (direction) => {
+  const newPosition = { x: currentPosition.x + direction.x, y: currentPosition.y + direction.y };
+  if (isValidMove(newPosition)) {
+    undrawPiece();
+    currentPosition = newPosition;
+    drawPiece();
+  } else if (direction.y === 1) {
+    freezePiece();
+    checkForCompleteLines();
+    generateNewPiece();
+  }
+};
+
+// ピースを回転
+const rotatePiece = () => {
+  undrawPiece();
+  const newShape = currentPiece.shape[0].map((_, index) => currentPiece.shape.map(row => row[index]).reverse());
+  const newPiece = { ...currentPiece, shape: newShape };
+  if (isValidMove(currentPosition)) {
+    currentPiece = newPiece;
+  }
+  drawPiece();
+};
+
+// ピースを落下
+const dropPiece = () => {
+  movePiece({ x: 0, y: 1 });
+};
+
+// 新しいピースを生成
+const generateNewPiece = () => {
+  const piece = pieces[Math.floor(Math.random() * pieces.length)];
+  currentPiece = { shape: piece.shape, rotations: piece.rotations };
+  currentPosition = { x: Math.floor(cols / 2) - 1, y: 0 };
+  if (!isValidMove(currentPosition)) {
+    clearInterval(tetrisInterval);
+    tetrisStartBtn.style.display = 'none';
+    tetrisRestartBtn.style.display = 'block';
+    alert('ゲームオーバー');
+  } else {
+    drawPiece();
+  }
+};
+
+// 完成したラインをチェックして削除
+const checkForCompleteLines = () => {
+  for (let r = 0; r < rows; r++) {
+    const rowStart = r * cols;
+    const rowEnd = rowStart + cols;
+    if (boardState.slice(rowStart, rowEnd).every(cell => cell === 1)) {
+      // 完成した行を削除
+      boardState.splice(rowStart, cols);
+      // 新しい空の行を追加
+      boardState.unshift(...Array(cols).fill(0));
+      tetrisScore += 10;
+      tetrisScoreDisplay.textContent = tetrisScore;
+      // ボードを再描画
+      for (let i = 0; i < boardState.length; i++) {
+        if (boardState[i] === 1) {
+          tetrisBoard.children[i].classList.add('filled');
+        } else {
+          tetrisBoard.children[i].classList.remove('filled');
+        }
+      }
+    }
+  }
+};
+
+// ゲーム開始
+const startTetris = () => {
+  tetrisStartBtn.style.display = 'none';
+  tetrisRestartBtn.style.display = 'none';
+  tetrisScore = 0;
+  tetrisScoreDisplay.textContent = tetrisScore;
+  createBoard();
+  generateNewPiece();
+  tetrisInterval = setInterval(dropPiece, 1000);
+};
+
+// リスタート
+const restartTetris = () => {
+  clearInterval(tetrisInterval);
+  startTetris();
+};
+
+// イベントリスナー
+tetrisStartBtn.addEventListener('click', startTetris);
+tetrisRestartBtn.addEventListener('click', restartTetris);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'a') movePiece({ x: -1, y: 0 });
+  if (e.key === 'd') movePiece({ x: 1, y: 0 });
+  if (e.key === 'w' || e.key === 'Enter') rotatePiece(); // 'w'キーまたは'Enter'キーで回転
+  if (e.key === 's') dropPiece();
+});
