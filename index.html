@@ -75,6 +75,72 @@
 .cell.filled {
   background-color: #000;
 }
+
+.next-piece-container {
+  margin-top: 20px;
+  text-align: left;
+  margin-left: 20px;
+}
+
+.next-piece-board {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background-color: #333;
+  width: 80px;
+  height: 80px;
+}
+
+.next-piece-board .cell {
+  background-color: #fff;
+}
+
+.next-piece-board .cell.filled {
+  background-color: #000;
+}
+
+.tetris-board {
+  display: grid;
+  grid-template-rows: repeat(20, 1fr);
+  grid-template-columns: repeat(10, 1fr);
+  gap: 1px;
+  background-color: #333;
+  width: 300px; /* 幅を300pxに設定 */
+  height: 600px; /* 高さを600pxに設定 */
+}
+
+.tetris-board .cell {
+  background-color: #fff;
+}
+
+.tetris-board .cell.filled {
+  background-color: #000;
+}
+
+.scoreboard {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.scoreboard p {
+  font-size: 20px;
+}
+
+.high-scores {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.high-scores ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.high-scores li {
+  font-size: 18px;
+  margin: 5px 0;
+}
     </style>
 </head>
 <body>
@@ -240,12 +306,20 @@
 
         <div class="game-container" id="tetris-game">
             <h2>テトリス</h2>
+            <div class="next-piece-container">
+                <h3>次のピース</h3>
+                <div class="next-piece-board" id="next-piece-board"></div>
+            </div>
             <div class="tetris-board" id="tetris-board"></div>
             <div class="scoreboard">
                 <p>スコア: <span id="tetris-score">0</span></p>
             </div>
             <button id="tetris-start-btn" class="btn btn-primary">ゲーム開始</button>
             <button id="tetris-restart-btn" class="btn btn-secondary" style="display: none;">リスタート</button>
+            <div class="high-scores">
+                <h3>スコアボード</h3>
+                <ul id="high-scores-list"></ul>
+            </div>
         </div>
     </main>
     <!-- Main(End) -->
