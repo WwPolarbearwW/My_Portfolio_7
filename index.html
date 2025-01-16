@@ -210,6 +210,7 @@
                 <button class="btn btn-primary game-title" data-game="battle-container">ターン制バトルゲーム</button>
                 <button class="btn btn-primary game-title" data-game="quiz-game">震源地名クイズ</button>
                 <button class="btn btn-primary game-title" data-game="tetris-game">テトリス</button>
+                <button class="btn btn-primary game-title" data-game="breakout-game">ブロック崩し</button>
             </div>
         
             <div class="game-container" id="memory-game" style="display: none;">
@@ -314,6 +315,15 @@
                     <h3>スコアボード</h3>
                     <ul id="high-scores-list"></ul>
                 </div>
+            </div>
+        
+            <div class="game-container" id="breakout-game" style="display: none;">
+                <h2>ブロック崩し</h2>
+                <canvas id="breakout-canvas" width="480" height="320"></canvas>
+                <div class="scoreboard">
+                    <p>スコア: <span id="breakout-score">0</span></p>
+                </div>
+                <button id="breakout-start-btn" class="btn btn-primary">ゲーム開始</button>
             </div>
         </div>
     </main>

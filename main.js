@@ -878,3 +878,170 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowUp' || e.key === 'Enter') rotatePiece(); // 'ArrowUp'キーまたは'Enter'キーで回転
   if (e.key === 'w') rotatePieceCounterClockwise(); // 'w'キーで逆回転
 });
+
+
+//ブロック崩し
+document.addEventListener('DOMContentLoaded', () => {
+  const gameTitles = document.querySelectorAll('.game-title');
+  const gameContainers = document.querySelectorAll('.game-container');
+
+  gameTitles.forEach(title => {
+    title.addEventListener('click', () => {
+      const gameId = title.getAttribute('data-game');
+      gameContainers.forEach(container => {
+        if (container.id === gameId) {
+          container.style.display = 'block';
+        } else {
+          container.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // ブロック崩しゲームのロジック
+  const breakoutCanvas = document.getElementById('breakout-canvas');
+  const breakoutCtx = breakoutCanvas.getContext('2d');
+  const breakoutScoreDisplay = document.getElementById('breakout-score');
+  const breakoutStartBtn = document.getElementById('breakout-start-btn');
+  let breakoutScore = 0;
+  let breakoutInterval;
+  let ballX = breakoutCanvas.width / 2;
+  let ballY = breakoutCanvas.height - 30;
+  let ballDX = 2;
+  let ballDY = -2;
+  const ballRadius = 10;
+  const paddleHeight = 10;
+  const paddleWidth = 75;
+  let paddleX = (breakoutCanvas.width - paddleWidth) / 2;
+  let rightPressed = false;
+  let leftPressed = false;
+  const brickRowCount = 3;
+  const brickColumnCount = 5;
+  const brickWidth = 75;
+  const brickHeight = 20;
+  const brickPadding = 10;
+  const brickOffsetTop = 30;
+  const brickOffsetLeft = 30;
+  const bricks = [];
+
+  for (let c = 0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+    for (let r = 0; r < brickRowCount; r++) {
+      bricks[c][r] = { x: 0, y: 0, status: 1 };
+    }
+  }
+
+  const drawBall = () => {
+    breakoutCtx.beginPath();
+    breakoutCtx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+    breakoutCtx.fillStyle = '#0095DD';
+    breakoutCtx.fill();
+    breakoutCtx.closePath();
+  };
+
+  const drawPaddle = () => {
+    breakoutCtx.beginPath();
+    breakoutCtx.rect(paddleX, breakoutCanvas.height - paddleHeight, paddleWidth, paddleHeight);
+    breakoutCtx.fillStyle = '#0095DD';
+    breakoutCtx.fill();
+    breakoutCtx.closePath();
+  };
+
+  const drawBricks = () => {
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          breakoutCtx.beginPath();
+          breakoutCtx.rect(brickX, brickY, brickWidth, brickHeight);
+          breakoutCtx.fillStyle = '#0095DD';
+          breakoutCtx.fill();
+          breakoutCtx.closePath();
+        }
+      }
+    }
+  };
+
+  const draw = () => {
+    breakoutCtx.clearRect(0, 0, breakoutCanvas.width, breakoutCanvas.height);
+    drawBricks();
+    drawBall();
+    drawPaddle();
+    collisionDetection();
+
+    if (ballX + ballDX > breakoutCanvas.width - ballRadius || ballX + ballDX < ballRadius) {
+      ballDX = -ballDX;
+    }
+    if (ballY + ballDY < ballRadius) {
+      ballDY = -ballDY;
+    } else if (ballY + ballDY > breakoutCanvas.height - ballRadius) {
+      if (ballX > paddleX && ballX < paddleX + paddleWidth) {
+        ballDY = -ballDY;
+      } else {
+        clearInterval(breakoutInterval);
+        alert('ゲームオーバー');
+        document.location.reload();
+      }
+    }
+
+    if (rightPressed && paddleX < breakoutCanvas.width - paddleWidth) {
+      paddleX += 7;
+    } else if (leftPressed && paddleX > 0) {
+      paddleX -= 7;
+    }
+
+    ballX += ballDX;
+    ballY += ballDY;
+  };
+
+  const collisionDetection = () => {
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        const b = bricks[c][r];
+        if (b.status === 1) {
+          if (
+            ballX > b.x &&
+            ballX < b.x + brickWidth &&
+            ballY > b.y &&
+            ballY < b.y + brickHeight
+          ) {
+            ballDY = -ballDY;
+            b.status = 0;
+            breakoutScore++;
+            breakoutScoreDisplay.textContent = breakoutScore;
+            if (breakoutScore === brickRowCount * brickColumnCount) {
+              alert('おめでとうございます！ あなたはすべてのブロックを壊しました！');
+              document.location.reload();
+            }
+          }
+        }
+      }
+    }
+  };
+
+  const keyDownHandler = (e) => {
+    if (e.key === 'Right' || e.key === 'ArrowRight') {
+      rightPressed = true;
+    } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+      leftPressed = true;
+    }
+  };
+
+  const keyUpHandler = (e) => {
+    if (e.key === 'Right' || e.key === 'ArrowRight') {
+      rightPressed = false;
+    } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+      leftPressed = false;
+    }
+  };
+
+  document.addEventListener('keydown', keyDownHandler);
+  document.addEventListener('keyup', keyUpHandler);
+
+  breakoutStartBtn.addEventListener('click', () => {
+    breakoutInterval = setInterval(draw, 10);
+  });
+});
