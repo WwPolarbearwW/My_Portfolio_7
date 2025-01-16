@@ -203,27 +203,25 @@
 
     <!-- Main(Start) -->
     <main>
-        <div class="text-center" id="my_key">
-            <div class="d-flex flex-column align-items-center custom-bg">
-                <h1 class="black-text">My Portfolio</h1>
-                <h3 class="black-text">ゲームコレクション</h3>
-                <h6 class="black-text">Web Games</h6>
-            </div>
-        </div>
-
         <div class="games-container" id="my_portfolio">
             <h1>ポートフォリオゲームコレクション</h1>
-            <div class="game-container" id="memory-game">
+            <div class="game-selection">
+                <button class="btn btn-primary game-title" data-game="memory-game">神経衰弱</button>
+                <button class="btn btn-primary game-title" data-game="battle-container">ターン制バトルゲーム</button>
+                <button class="btn btn-primary game-title" data-game="quiz-game">震源地名クイズ</button>
+                <button class="btn btn-primary game-title" data-game="tetris-game">テトリス</button>
+            </div>
+        
+            <div class="game-container" id="memory-game" style="display: none;">
                 <h2>神経衰弱</h2>
                 <div class="game-board" id="board"></div>
                 <div class="scoreboard">
                     <p>スコア: <span id="score">0</span></p>
                 </div>
             </div>
-
-            <div class="battle-container" id="battle-container">
+        
+            <div class="game-container" id="battle-container" style="display: none;">
                 <h1>ターン制バトルゲーム</h1>
-    
                 <!-- 戦闘エリア -->
                 <div class="battle-field">
                     <!-- プレイヤー1 -->
@@ -243,7 +241,7 @@
                         </div>
                     </div>
                 </div>
-
+        
                 <div id="turn-indicator">
                     <div>
                         <span id="player1-name">プレイヤー1</span>
@@ -252,10 +250,9 @@
                     <div>
                         <span id="arrow2" class="arrow">⇦</span> <!-- プレイヤー2の矢印 -->
                         <span id="player2-name">プレイヤー2</span>
-                        
                     </div>
                 </div>
-    
+        
                 <!-- ボタンコンテナ -->
                 <div class="buttons-container">
                     <button id="start-btn" class="btn btn-primary">ゲーム開始</button>
@@ -263,21 +260,20 @@
                     <button id="heal-btn" class="btn btn-success" disabled>回復</button>
                     <button id="item-btn" class="btn btn-warning" disabled>アイテム</button>
                 </div>
-    
+        
                 <div class="scoreboard" id="scoreboard">
                     <p>ターン: <span id="turn">プレイヤー1</span></p>
                 </div>
                 <div id="result"></div>
-
+        
                 <!-- メッセージログ -->
-            <div class="message-log">
-                <h3>戦闘ログ</h3>
-                <ul id="message-log"></ul>
+                <div class="message-log">
+                    <h3>戦闘ログ</h3>
+                    <ul id="message-log"></ul>
+                </div>
             </div>
-
-            <br>
-            <!--クイズゲーム-->
-            <div class="game-container" id="quiz-game">
+        
+            <div class="game-container" id="quiz-game" style="display: none;">
                 <h2>震源地名クイズ</h2>
                 <h3>消えている箇所を答えてください。</h3>
                 <div class="quiz-container" id="quiz-container">
@@ -301,24 +297,23 @@
                     </div>
                 </div>
             </div>
-            
-        </div>
-
-        <div class="game-container" id="tetris-game">
-            <h2>テトリス</h2>
-            <div class="next-piece-container">
-                <h3>次のピース</h3>
-                <div class="next-piece-board" id="next-piece-board"></div>
-            </div>
-            <div class="tetris-board" id="tetris-board"></div>
-            <div class="scoreboard">
-                <p>スコア: <span id="tetris-score">0</span></p>
-            </div>
-            <button id="tetris-start-btn" class="btn btn-primary">ゲーム開始</button>
-            <button id="tetris-restart-btn" class="btn btn-secondary" style="display: none;">リスタート</button>
-            <div class="high-scores">
-                <h3>スコアボード</h3>
-                <ul id="high-scores-list"></ul>
+        
+            <div class="game-container" id="tetris-game" style="display: none;">
+                <h2>テトリス</h2>
+                <div class="next-piece-container">
+                    <h3>次のピース</h3>
+                    <div class="next-piece-board" id="next-piece-board"></div>
+                </div>
+                <div class="tetris-board" id="tetris-board"></div>
+                <div class="scoreboard">
+                    <p>スコア: <span id="tetris-score">0</span></p>
+                </div>
+                <button id="tetris-start-btn" class="btn btn-primary">ゲーム開始</button>
+                <button id="tetris-restart-btn" class="btn btn-secondary" style="display: none;">リスタート</button>
+                <div class="high-scores">
+                    <h3>スコアボード</h3>
+                    <ul id="high-scores-list"></ul>
+                </div>
             </div>
         </div>
     </main>

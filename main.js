@@ -1,5 +1,23 @@
 // script.js
 
+document.addEventListener('DOMContentLoaded', () => {
+  const gameTitles = document.querySelectorAll('.game-title');
+  const gameContainers = document.querySelectorAll('.game-container');
+
+  gameTitles.forEach(title => {
+    title.addEventListener('click', () => {
+      const gameId = title.getAttribute('data-game');
+      gameContainers.forEach(container => {
+        if (container.id === gameId) {
+          container.style.display = 'block';
+        } else {
+          container.style.display = 'none';
+        }
+      });
+    });
+  });
+});
+
 const board = document.getElementById('board');
 const scoreDisplay = document.getElementById('score');
 let flippedCards = [];
