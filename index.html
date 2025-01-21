@@ -319,13 +319,17 @@
         
             <div class="game-container" id="breakout-game" style="display: none;">
                 <h2>ブロック崩し</h2>
-                <canvas id="breakout-canvas" width="480" height="320"></canvas>
+                <canvas id="breakout-canvas" width="480" height="480"></canvas>
                 <div class="scoreboard">
                     <p>スコア: <span id="breakout-score">0</span></p>
                 </div>
                 <button id="breakout-start-btn" class="btn btn-primary">ゲーム開始</button>
+                <button id="breakout-restart-btn" class="btn btn-secondary" style="display: none;">リスタート</button>
+                <button id="bgm-play-btn" class="btn btn-info">BGM再生</button>
+                <audio id="bgm-audio" src="神隠しの真相_2.mp3" style="display: none;"></audio>
+                <label for="volume-slider">音量調整:</label>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
             </div>
-        </div>
     </main>
     <!-- Main(End) -->
 

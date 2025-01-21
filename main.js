@@ -903,6 +903,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const breakoutCtx = breakoutCanvas.getContext('2d');
   const breakoutScoreDisplay = document.getElementById('breakout-score');
   const breakoutStartBtn = document.getElementById('breakout-start-btn');
+  const breakoutRestartBtn = document.getElementById('breakout-restart-btn');
+  const bgmPlayBtn = document.getElementById('bgm-play-btn');
+  const bgmAudio = document.getElementById('bgm-audio');
+  const volumeSlider = document.getElementById('volume-slider');
   let breakoutScore = 0;
   let breakoutInterval;
   let ballX = breakoutCanvas.width / 2;
@@ -915,26 +919,28 @@ document.addEventListener('DOMContentLoaded', () => {
   let paddleX = (breakoutCanvas.width - paddleWidth) / 2;
   let rightPressed = false;
   let leftPressed = false;
-  const brickRowCount = 3;
-  const brickColumnCount = 5;
-  const brickWidth = 75;
-  const brickHeight = 20;
+  const brickColumnCount = 6; // ブロックの列を6列に増やす
+  const brickRowCount = 6; // ブロックの行を6行に設定
+  const brickWidth = 60; // ブロックの幅を小さくする
+  const brickHeight = 15; // ブロックの高さを小さくする
   const brickPadding = 10;
   const brickOffsetTop = 30;
   const brickOffsetLeft = 30;
   const bricks = [];
 
+  const brickColors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#33FFF5', '#FF8C33']; // 各段の色を設定
+
   for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = [];
     for (let r = 0; r < brickRowCount; r++) {
-      bricks[c][r] = { x: 0, y: 0, status: 1 };
+      bricks[c][r] = { x: 0, y: 0, status: 1, color: brickColors[r] }; // 各段の色を設定
     }
   }
 
   const drawBall = () => {
     breakoutCtx.beginPath();
     breakoutCtx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-    breakoutCtx.fillStyle = '#0095DD';
+    breakoutCtx.fillStyle = '#00CC99';
     breakoutCtx.fill();
     breakoutCtx.closePath();
   };
@@ -957,7 +963,7 @@ document.addEventListener('DOMContentLoaded', () => {
           bricks[c][r].y = brickY;
           breakoutCtx.beginPath();
           breakoutCtx.rect(brickX, brickY, brickWidth, brickHeight);
-          breakoutCtx.fillStyle = '#0095DD';
+          breakoutCtx.fillStyle = bricks[c][r].color; // ブロックの色を設定
           breakoutCtx.fill();
           breakoutCtx.closePath();
         }
@@ -982,8 +988,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ballDY = -ballDY;
       } else {
         clearInterval(breakoutInterval);
+        breakoutRestartBtn.style.display = 'block';
+        bgmAudio.pause(); // ゲームオーバー時にBGMを停止
         alert('ゲームオーバー');
-        document.location.reload();
       }
     }
 
@@ -1003,18 +1010,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const b = bricks[c][r];
         if (b.status === 1) {
           if (
-            ballX > b.x &&
-            ballX < b.x + brickWidth &&
-            ballY > b.y &&
-            ballY < b.y + brickHeight
+            ballX + ballRadius > b.x &&
+            ballX - ballRadius < b.x + brickWidth &&
+            ballY + ballRadius > b.y &&
+            ballY - ballRadius < b.y + brickHeight
           ) {
             ballDY = -ballDY;
             b.status = 0;
             breakoutScore++;
             breakoutScoreDisplay.textContent = breakoutScore;
             if (breakoutScore === brickRowCount * brickColumnCount) {
+              clearInterval(breakoutInterval);
+              breakoutRestartBtn.style.display = 'block';
+              bgmAudio.pause(); // すべてのブロックを壊したときにBGMを停止
               alert('おめでとうございます！ あなたはすべてのブロックを壊しました！');
-              document.location.reload();
             }
           }
         }
@@ -1023,25 +1032,64 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const keyDownHandler = (e) => {
-    if (e.key === 'Right' || e.key === 'ArrowRight') {
+    if (e.key === 'Right' || e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
       rightPressed = true;
-    } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+    } else if (e.key === 'Left' || e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
       leftPressed = true;
     }
   };
 
   const keyUpHandler = (e) => {
-    if (e.key === 'Right' || e.key === 'ArrowRight') {
+    if (e.key === 'Right' || e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
       rightPressed = false;
-    } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+    } else if (e.key === 'Left' || e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
       leftPressed = false;
     }
+  };
+
+  const resetGame = () => {
+    clearInterval(breakoutInterval);
+    breakoutScore = 0;
+    breakoutScoreDisplay.textContent = breakoutScore;
+    ballX = breakoutCanvas.width / 2;
+    ballY = breakoutCanvas.height - 30;
+    ballDX = 2;
+    ballDY = -2;
+    paddleX = (breakoutCanvas.width - paddleWidth) / 2;
+    rightPressed = false;
+    leftPressed = false;
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        bricks[c][r].status = 1;
+      }
+    }
+    breakoutRestartBtn.style.display = 'none';
+    breakoutInterval = setInterval(draw, 10);
+    bgmAudio.play(); // ゲームリセット時にBGMを再生
   };
 
   document.addEventListener('keydown', keyDownHandler);
   document.addEventListener('keyup', keyUpHandler);
 
   breakoutStartBtn.addEventListener('click', () => {
+    breakoutStartBtn.style.display = 'none';
     breakoutInterval = setInterval(draw, 10);
+    bgmAudio.play(); // ゲーム開始時にBGMを再生
+  });
+
+  breakoutRestartBtn.addEventListener('click', resetGame);
+
+  bgmPlayBtn.addEventListener('click', () => {
+    if (bgmAudio.paused) {
+      bgmAudio.play();
+      bgmPlayBtn.textContent = 'BGM停止';
+    } else {
+      bgmAudio.pause();
+      bgmPlayBtn.textContent = 'BGM再生';
+    }
+  });
+
+  volumeSlider.addEventListener('input', () => {
+    bgmAudio.volume = volumeSlider.value;
   });
 });
