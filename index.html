@@ -141,6 +141,31 @@
   font-size: 18px;
   margin: 5px 0;
 }
+
+.jumping-game-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    margin-top: 20px;
+}
+
+#jumping-game-canvas {
+    background-color: #f0f0f0;
+    display: block;
+    margin: 0 auto;
+    border: 2px solid #333;
+}
+
+.scoreboard {
+    text-align: center;
+    margin-top: 10px;
+}
+
+#jumping-game-start-btn, #jumping-game-restart-btn {
+    display: block;
+    margin: 20px auto;
+}
+
     </style>
 </head>
 <body>
@@ -211,6 +236,8 @@
                 <button class="btn btn-primary game-title" data-game="quiz-game">震源地名クイズ</button>
                 <button class="btn btn-primary game-title" data-game="tetris-game">テトリス</button>
                 <button class="btn btn-primary game-title" data-game="breakout-game">ブロック崩し</button>
+                <button class="btn btn-primary game-title" data-game="snake-game">スネークゲーム</button> <!-- 追加 -->
+                <button class="btn btn-primary game-title" data-game="jumping-game">ジャンピングゲーム(製作中)</button>
             </div>
         
             <div class="game-container" id="memory-game" style="display: none;">
@@ -330,6 +357,34 @@
                 <label for="volume-slider">音量調整:</label>
                 <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
             </div>
+        
+            <div class="game-container" id="snake-game" style="display: none;">
+                <h2>スネークゲーム</h2>
+                <canvas id="snake-canvas" width="400" height="400"></canvas>
+                <div class="scoreboard">
+                    <p>スコア: <span id="snake-score">0</span></p>
+                </div>
+                <button id="snake-start-btn" class="btn btn-primary">ゲーム開始</button>
+                <button id="snake-restart-btn" class="btn btn-secondary" style="display: none;">リスタート</button>
+                <div class="high-scores">
+                    <h3>スコアボード</h3>
+                    <ul id="high-scores-list"></ul>
+                </div>
+            </div>
+
+            <div class="game-container" id="jumping-game" style="display: none;">
+                <h2>ジャンピングゲーム</h2>
+                <div class="jumping-game-container">
+                    <canvas id="jumping-game-canvas" width="500" height="300"></canvas>
+                    <div class="scoreboard">
+                        <p>スコア: <span id="jumping-game-score">0</span></p>
+                    </div>
+                    <button id="jumping-game-start-btn" class="btn btn-primary">ゲーム開始</button>
+                    <button id="jumping-game-restart-btn" class="btn btn-secondary" style="display: none;">リスタート</button>
+                </div>
+            </div>
+            
+        </div>
     </main>
     <!-- Main(End) -->
 

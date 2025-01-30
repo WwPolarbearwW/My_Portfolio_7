@@ -1093,3 +1093,262 @@ document.addEventListener('DOMContentLoaded', () => {
     bgmAudio.volume = volumeSlider.value;
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const gameTitles = document.querySelectorAll('.game-title');
+  const gameContainers = document.querySelectorAll('.game-container');
+
+  gameTitles.forEach(title => {
+    title.addEventListener('click', () => {
+      const gameId = title.getAttribute('data-game');
+      gameContainers.forEach(container => {
+        if (container.id === gameId) {
+          container.style.display = 'block';
+        } else {
+          container.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // スネークゲームのロジック
+  const snakeCanvas = document.getElementById('snake-canvas');
+  const snakeCtx = snakeCanvas.getContext('2d');
+  const snakeScoreDisplay = document.getElementById('snake-score');
+  const snakeStartBtn = document.getElementById('snake-start-btn');
+  const snakeRestartBtn = document.getElementById('snake-restart-btn');
+  const highScoresList = document.getElementById('high-scores-list');
+  let snakeInterval;
+  let snake;
+  let food;
+  let direction;
+  let score;
+  let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+
+  const initGame = () => {
+    snake = [{ x: 10, y: 10 }];
+    food = { x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20) };
+    direction = { x: 0, y: 0 };
+    score = 0;
+    snakeScoreDisplay.textContent = score;
+    snakeRestartBtn.style.display = 'none';
+  };
+
+  const drawSnake = () => {
+    snakeCtx.clearRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+    // 壁を描画
+    snakeCtx.strokeStyle = 'green';
+    snakeCtx.lineWidth = 4;
+    snakeCtx.strokeRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+    snake.forEach(segment => {
+      snakeCtx.fillStyle = 'green';
+      snakeCtx.fillRect(segment.x * 20, segment.y * 20, 20, 20);
+    });
+    snakeCtx.fillStyle = 'red';
+    snakeCtx.fillRect(food.x * 20, food.y * 20, 20, 20);
+  };
+
+  const moveSnake = () => {
+    const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+    snake.unshift(head);
+    if (head.x === food.x && head.y === food.y) {
+      score++;
+      snakeScoreDisplay.textContent = score;
+      food = { x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20) };
+    } else {
+      snake.pop();
+    }
+    if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) {
+      clearInterval(snakeInterval);
+      snakeRestartBtn.style.display = 'block';
+      saveHighScore(score);
+      alert('ゲームオーバー');
+    }
+  };
+
+  const gameLoop = () => {
+    moveSnake();
+    drawSnake();
+  };
+
+  const saveHighScore = (score) => {
+    highScores.push(score);
+    highScores.sort((a, b) => b - a);
+    highScores = highScores.slice(0, 5); // 上位5つのスコアのみ保存
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+    displayHighScores();
+  };
+
+  const displayHighScores = () => {
+    highScoresList.innerHTML = highScores.map(score => `<li>${score}</li>`).join('');
+  };
+
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowUp':
+      case 'w':
+      case 'W':
+        if (direction.y === 0) direction = { x: 0, y: -1 };
+        break;
+      case 'ArrowDown':
+      case 's':
+      case 'S':
+        if (direction.y === 0) direction = { x: 0, y: 1 };
+        break;
+      case 'ArrowLeft':
+      case 'a':
+      case 'A':
+        if (direction.x === 0) direction = { x: -1, y: 0 };
+        break;
+      case 'ArrowRight':
+      case 'd':
+      case 'D':
+        if (direction.x === 0) direction = { x: 1, y: 0 };
+        break;
+    }
+  });
+
+  snakeStartBtn.addEventListener('click', () => {
+    snakeStartBtn.style.display = 'none';
+    initGame();
+    snakeInterval = setInterval(gameLoop, 100);
+  });
+
+  snakeRestartBtn.addEventListener('click', () => {
+    initGame();
+    snakeInterval = setInterval(gameLoop, 100);
+  });
+
+  displayHighScores(); // ページ読み込み時にハイスコアを表示
+});
+
+// ゲームの初期化
+let canvas = document.getElementById('jumping-game-canvas');
+let ctx = canvas.getContext('2d');
+let score = 0;
+let isJumping = false;
+let jumpHeight = 0;
+let obstacles = [];
+let gameInterval;
+let jumpSpeed = 20; // ジャンプ速度を速く設定
+let gravity = 0.6;
+let isGameOver = false; // ゲームオーバー状態を管理
+let obstacleSpeed = 4; // 障害物の速度（変更なし）
+let maxJumpHeight = 100;  // ジャンプの最大高さ
+
+// プレイヤー設定
+let player = {
+    x: 50,
+    y: canvas.height - 60, // 地面からの高さ
+    width: 40,
+    height: 60,
+    color: '#32cd32',
+};
+
+// 障害物設定
+function generateObstacle() {
+    // ギャップ高さを広めに設定（100-150px）
+    let gapHeight = Math.random() * 100 + 150;  
+    let obstacleHeight = canvas.height - gapHeight - 100; // 障害物の上部と下部の高さ
+
+    obstacles.push({
+        x: canvas.width,
+        y: 0,
+        width: 30,
+        height: obstacleHeight,
+        gapHeight: gapHeight,
+        color: '#ff6347',
+    });
+}
+
+// ジャンプの処理
+function jump() {
+  if (isJumping) {
+      jumpHeight += jumpSpeed; // 連打でジャンプする高さを増加
+      if (jumpHeight >= maxJumpHeight) { // 最大高さに達したら上昇を止める
+          isJumping = false;
+      }
+  } else if (jumpHeight > 0) {
+      jumpHeight -= gravity; // 重力で下降
+  }
+}
+
+// ゲームの描画
+function draw() {
+    if (isGameOver) return; // ゲームオーバー状態なら描画を止める
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
+
+    // プレイヤーを描画
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y - jumpHeight, player.width, player.height);
+
+    // 障害物を描画
+    obstacles.forEach(function(obstacle) {
+        ctx.fillStyle = obstacle.color;
+        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height); // 上部の障害物
+        ctx.fillRect(obstacle.x, obstacle.y + obstacle.gapHeight, obstacle.width, canvas.height - obstacle.gapHeight); // 下部の障害物
+    });
+
+    // 障害物の移動
+    obstacles.forEach(function(obstacle, index) {
+        obstacle.x -= obstacleSpeed; // 障害物を左に移動
+        if (obstacle.x + obstacle.width < 0) {
+            obstacles.splice(index, 1); // 画面外に出たら削除
+            score++; // スコアを更新
+        }
+    });
+
+    // ジャンプの制御
+    jump();
+
+    // 衝突判定
+obstacles.forEach(function(obstacle) {
+  // プレイヤーが障害物の間を通り抜けているか
+  if (player.x + player.width > obstacle.x && player.x < obstacle.x + obstacle.width) {
+      // プレイヤーの位置が障害物の隙間に収まっているかを確認
+      if (player.y - jumpHeight + player.height > obstacle.height && 
+          player.y - jumpHeight < obstacle.height + obstacle.gapHeight) {
+          // 隙間を通過していない場合、ゲームオーバー
+          isGameOver = true;
+          clearInterval(gameInterval);
+          alert("ゲームオーバー! スコア: " + score);
+          document.getElementById("jumping-game-restart-btn").style.display = "block";
+      }
+  }
+});
+}
+
+
+// ゲーム開始
+document.getElementById('jumping-game-start-btn').addEventListener('click', function() {
+    if (isGameOver) return; // ゲームオーバー後は開始ボタンを無効化
+
+    score = 0;
+    obstacles = [];
+    isGameOver = false;
+    document.getElementById('jumping-game-restart-btn').style.display = "none";
+    
+    // 障害物をランダムな間隔で生成するための処理
+    gameInterval = setInterval(function() {
+        if (Math.random() < 0.05) {
+            generateObstacle(); // 障害物をランダムで生成
+        }
+        draw();
+    }, 1000 / 60); // 60 FPS
+});
+
+// キー入力処理（連打でジャンプを続ける）
+document.addEventListener('keydown', function(event) {
+  if (event.code === 'KeyA' && !isGameOver) { // Aキーでジャンプ開始
+      isJumping = true; // Aキーでジャンプ開始
+  }
+});
+
+// ゲーム再スタート
+document.getElementById('jumping-game-restart-btn').addEventListener('click', function() {
+    window.location.reload(); // ページをリロードしてゲームを再スタート
+});
+
